@@ -78,7 +78,7 @@ export class ViewclientComponent implements OnInit {
     this.apiService.getDataList(clientDetails, 1, 1, null, null, null).
       subscribe((response) => {
         this.editClientDetails = response['body'];
-        this.setStatus();
+        this.setStatusName();
         this.setDataToEdit();
       }, (error) => {
         if (error instanceof HttpErrorResponse) {
@@ -89,7 +89,7 @@ export class ViewclientComponent implements OnInit {
       });
   }
 
-  setStatus(){
+  setStatusName(){
     if(this.editClientDetails.status == this.status.active.id){
       this.statusName = this.status.active.name;
     }
