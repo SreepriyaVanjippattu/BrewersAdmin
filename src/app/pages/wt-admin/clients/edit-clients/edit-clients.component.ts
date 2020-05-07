@@ -239,7 +239,6 @@ export class EditClientsComponent implements OnInit {
   }
 
   setDataToEdit() {
-    debugger;
     if (this.editClientDetails) {
       if (this.editClientDetails.subscriptions && this.editClientDetails.subscriptions.length > 0) {
         this.package = this.editClientDetails.subscriptions[0].name;

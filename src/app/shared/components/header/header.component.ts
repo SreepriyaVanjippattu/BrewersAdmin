@@ -69,7 +69,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   logoutClick() {
-    debugger;
     // if (!sessionStorage.user || sessionStorage.user === '') {
        sessionStorage.clear();
        localStorage.clear();
@@ -80,7 +79,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   logOutModalOpen(confirmModal) {
-    debugger;
     this.modalService.open(confirmModal, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
     }, (reason) => {
     });

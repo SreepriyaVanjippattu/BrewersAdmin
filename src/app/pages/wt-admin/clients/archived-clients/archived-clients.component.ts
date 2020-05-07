@@ -62,7 +62,6 @@ export class ArchivedClientsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    debugger;
     const user = JSON.parse(sessionStorage.getItem('user'));
     this.userProfile = user['userDetails'];
     this.currentUser = this.userProfile.userId;

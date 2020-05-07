@@ -64,7 +64,6 @@ export class ViewclientComponent implements OnInit {
   });
 
   ngOnInit() {
-    debugger;
     const user = JSON.parse(sessionStorage.getItem('user'));
     this.userProfile = user['userDetails'];
     this.currentUser = this.userProfile.userId;
@@ -100,7 +99,6 @@ export class ViewclientComponent implements OnInit {
   }
 
   setDataToEdit() {
-    debugger;
     if (this.editClientDetails) {
       if (this.editClientDetails.subscriptions && this.editClientDetails.subscriptions.length > 0) {
         this.package = this.editClientDetails.subscriptions[0].name;

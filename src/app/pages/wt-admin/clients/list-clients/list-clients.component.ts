@@ -295,7 +295,6 @@ export class ListClientsComponent implements OnInit {
   }
 
   resetpasswordClick(email,id) {
-    debugger;
     const params = {
       emailAddress: email,
       url: this.envURL + '/login/forgot-changepassword',

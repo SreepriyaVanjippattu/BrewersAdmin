@@ -85,7 +85,6 @@ export class ArchivedComponent implements OnInit {
   }
 
   setDataToEdit() {
-    debugger;
     this.clientEditForm.get('company').setValue(this.editClientDetails.name);
     this.clientEditForm.get('email').setValue(this.editClientDetails.contactEmail);
     this.clientEditForm.get('phone').setValue(this.editClientDetails.contactPhone);
