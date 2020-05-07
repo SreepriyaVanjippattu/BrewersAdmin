@@ -6,7 +6,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ApiProviderService } from '../../../../core/api-services/api-provider.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-import { Tenant } from '../../../../models/tenant';
 import { PhoneFormatPipe } from '../../../../core/utils/phone-format.pipe';
 import { StatusUse } from '../../../../models/status-id-name';
 import { NbToastrService } from '@nebular/theme';
@@ -35,7 +34,6 @@ export class EditClientsComponent implements OnInit {
   getTenantContent;
   currentStatus: Number;
   currentStatusText: string;
-  selectedTenant: Tenant;
   tenantList: any[];
   currentStatusValue;
   validPhone = true;
@@ -241,99 +239,95 @@ export class EditClientsComponent implements OnInit {
   }
 
   setDataToEdit() {
+    debugger;
     if (this.editClientDetails) {
-      if (this.editClientDetails.Subscriptions && this.editClientDetails.Subscriptions.length > 0) {
-        this.package = this.editClientDetails.Subscriptions[0].Name;
+      if (this.editClientDetails.subscriptions && this.editClientDetails.subscriptions.length > 0) {
+        this.package = this.editClientDetails.subscriptions[0].name;
       }
-      if (this.editClientDetails.Name !== null) {
+      if (this.editClientDetails.name) {
         this.clientEditForm.get('company').setValue(
-          this.editClientDetails.Name[0].toUpperCase() + this.editClientDetails.Name.substr(1).toUpperCase());
+          this.editClientDetails.name.toUpperCase() + this.editClientDetails.name.substr(1).toUpperCase());
       }
-      if (this.editClientDetails.ContactEmail !== null) {
-        this.clientEditForm.get('email').setValue(this.editClientDetails.ContactEmail);
+      if (this.editClientDetails.contactEmail) {
+        this.clientEditForm.get('email').setValue(this.editClientDetails.contactEmail);
       }
-      if (this.editClientDetails.OrgSuperUser !== null) {
-        if (this.editClientDetails.OrgSuperUser.EmailAddress !== null) {
-          this.clientEditForm.get('userEmail').setValue(this.editClientDetails.OrgSuperUser.EmailAddress);
+      if (this.editClientDetails.orgSuperUser) {
+        if (this.editClientDetails.orgSuperUser.emailAddress) {
+          this.clientEditForm.get('userEmail').setValue(this.editClientDetails.orgSuperUser.emailAddress);
         }
-        if (this.editClientDetails.ContactPhone !== null) {
-          this.clientEditForm.get('phone').setValue(this.editClientDetails.ContactPhone);
+        if (this.editClientDetails.contactPhone) {
+          this.clientEditForm.get('phone').setValue(this.editClientDetails.contactPhone);
         }
-        if (this.editClientDetails.OrgSuperUser.PrimaryPhone !== null) {
-          this.clientEditForm.get('userPhone').setValue(this.editClientDetails.OrgSuperUser.PrimaryPhone);
+        if (this.editClientDetails.orgSuperUser.phone) {
+          this.clientEditForm.get('userPhone').setValue(this.editClientDetails.orgSuperUser.phone);
         }
-        if (this.editClientDetails.StartDate !== null) {
-          const startDate = this.datepipe.transform(
-            this.editClientDetails.StartDate,
-            "dd/MM/yyyy hh:mm:ss a"
-          );
-          this.clientEditForm.controls.startDate.setValue(startDate);
-          const createdDate = this.editClientDetails.systemSetting[0]
-            .createdDate;
+        if (this.editClientDetails.startDate) {
+          let startDate = this.editClientDetails.startDate;
+          startDate = this.datepipe.transform(new Date(startDate), "dd/MM/yyyy hh:mm:ss a");
+          this.clientEditForm.get('startDate').setValue(startDate);
+          const createdDate = this.editClientDetails.systemSetting[0].createdDate;
           this.minStartDate = createdDate;
           this.maxStartDate = this.editClientDetails.endDate;
         }
-        if (this.editClientDetails.endDate !== null) {
-          const expiryDate = this.datepipe.transform(
-            this.editClientDetails.endDate,
-            "dd/MM/yyyy hh:mm:ss a"
-          );
-          this.clientEditForm.get("expiryDate").setValue(expiryDate);
+        if (this.editClientDetails.endDate) {
+          let expiryDate = this.editClientDetails.endDate;
+          expiryDate = this.datepipe.transform(new Date(expiryDate), "dd/MM/yyyy hh:mm:ss a");
+          this.clientEditForm.get('expiryDate').setValue(expiryDate);
           this.minExpiryDate = this.clientEditForm.get("startDate").value;
         }
-        if (this.editClientDetails.OrgSuperUser.FirstName !== null) {
-          this.clientEditForm.get('firstname').setValue(this.editClientDetails.OrgSuperUser.FirstName);
+        if (this.editClientDetails.orgSuperUser.firstName ) {
+          this.clientEditForm.get('firstname').setValue(this.editClientDetails.orgSuperUser.firstName);
         }
-        if (this.editClientDetails.OrgSuperUser.LastName !== null) {
-          this.clientEditForm.get('lastname').setValue(this.editClientDetails.OrgSuperUser.LastName);
+        if (this.editClientDetails.orgSuperUser.lastName) {
+          this.clientEditForm.get('lastname').setValue(this.editClientDetails.orgSuperUser.lastName);
         }
       }
 
-      if (this.editClientDetails.Address1 !== null && this.editClientDetails.Address1 !== '') {
-        if (this.editClientDetails.Address2 !== null && this.editClientDetails.Address2 !== '') {
+      if (this.editClientDetails.address1) {
+        if (this.editClientDetails.address2) {
           this.clientEditForm.get('street').setValue(
-            this.editClientDetails.Address1[0].toUpperCase() + this.editClientDetails.Address1.substr(1).toLowerCase() + ' , '
-          + this.editClientDetails.Address2[0].toUpperCase() + this.editClientDetails.Address2.substr(1).toLowerCase());
+            this.editClientDetails.address1[0].toUpperCase() + this.editClientDetails.address1.substr(1).toLowerCase() + ' , '
+            + this.editClientDetails.address2[0].toUpperCase() + this.editClientDetails.address2.substr(1).toLowerCase());
         } else {
           this.clientEditForm.get('street').setValue(
-            this.editClientDetails.Address1[0].toUpperCase() + this.editClientDetails.Address1.substr(1).toLowerCase());
+            this.editClientDetails.address1[0].toUpperCase() + this.editClientDetails.address1.substr(1).toLowerCase());
         }
       }
-      if (this.editClientDetails.Country) {
+      if (this.editClientDetails.country) {
         this.clientEditForm.get('country').setValue(
-          this.editClientDetails.Country[0] + this.editClientDetails.Country.substr(1).toLowerCase());
+          this.editClientDetails.country[0] + this.editClientDetails.country.substr(1).toLowerCase());
       }
-      if (this.editClientDetails.State) {
+      if (this.editClientDetails.state) {
         this.clientEditForm.get('state').setValue(
-          this.editClientDetails.State[0].toUpperCase() + this.editClientDetails.State.substr(1).toLowerCase());
+          this.editClientDetails.state[0].toUpperCase() + this.editClientDetails.state.substr(1).toLowerCase());
       }
-      if (this.editClientDetails.City) {
+      if (this.editClientDetails.city) {
         this.clientEditForm.get('city').setValue(
-          this.editClientDetails.City[0].toUpperCase() + this.editClientDetails.City.substr(1).toLowerCase());
+          this.editClientDetails.city[0].toUpperCase() + this.editClientDetails.city.substr(1).toLowerCase());
       }
-      if (this.editClientDetails.Postalcode !== null) {
-        this.clientEditForm.get('postalCode').setValue(this.editClientDetails.Postalcode);
+      if (this.editClientDetails.postalcode) {
+        this.clientEditForm.get('postalCode').setValue(this.editClientDetails.postalcode);
       }
-      if (this.editClientDetails.OrgSuperUser !== null) {
-        this.clientEditForm.get('userPhone').setValue(this.editClientDetails.OrgSuperUser.PrimaryPhone);
+      if (this.editClientDetails.orgSuperUser !== null) {
+        this.clientEditForm.get('userPhone').setValue(this.editClientDetails.orgSuperUser.phone);
       }
       this.tenantList.map((element: any) => {
-        if (element.Id === this.editClientDetails.StatusId) {
+        if (element.Id === this.editClientDetails.status) {
           this.subStatus = element.status;
         }
       });
-      this.clientEditForm.get('status').setValue(this.editClientDetails.StatusId);
+      this.clientEditForm.get('status').setValue(this.editClientDetails.status);
       if (this.dataTransfer.key && this.dataTransfer.value) {
         this.subId = this.dataTransfer.key;
         this.subName = this.dataTransfer.value;
         this.dataTransfer.key = '';
         this.dataTransfer.value = '';
       } else {
-        this.subId = this.editClientDetails.Subscriptions[0].Id;
-        this.subName = this.editClientDetails.Subscriptions[0].Name;
+        this.subId = this.editClientDetails.subscriptions[0].id;
+        this.subName = this.editClientDetails.subscriptions[0].name;
       }
       this.clientEditForm.get('userEmail').disable();
-      this.imageLink = this.editClientDetails.ImageUrl;
+      this.imageLink = this.editClientDetails.ImageURL;
     }
   }
 

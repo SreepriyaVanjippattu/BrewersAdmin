@@ -51,6 +51,7 @@ export class ArchivedComponent implements OnInit {
     lastname: [''],
     userEmail: [''],
     phone: ['', [Validators.required]],
+    userPhone: ['', [Validators.required]],
     userId: [''],
     password: [''],
   });
@@ -84,6 +85,7 @@ export class ArchivedComponent implements OnInit {
   }
 
   setDataToEdit() {
+    debugger;
     this.clientEditForm.get('company').setValue(this.editClientDetails.name);
     this.clientEditForm.get('email').setValue(this.editClientDetails.contactEmail);
     this.clientEditForm.get('phone').setValue(this.editClientDetails.contactPhone);
@@ -101,7 +103,7 @@ export class ArchivedComponent implements OnInit {
     this.clientEditForm.get('firstname').setValue(this.editClientDetails.orgSuperUser.firstName);
     this.clientEditForm.get('lastname').setValue(this.editClientDetails.orgSuperUser.lastName);
     this.clientEditForm.get('userEmail').setValue(this.editClientDetails.orgSuperUser.emailAddress);
-    this.clientEditForm.get('phone').setValue(this.editClientDetails.orgSuperUser.primaryPhone);
+    this.clientEditForm.get('userPhone').setValue(this.editClientDetails.orgSuperUser.phone);
     this.clientEditForm.get('userId').setValue(this.editClientDetails.orgSuperUser.emailAddress);
     // this.clientEditForm.get('password').setValue(this.editClientDetails.OrgSuperUser.Password);
     this.imageLink = this.editClientDetails.imageUrl;

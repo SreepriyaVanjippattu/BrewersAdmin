@@ -62,6 +62,7 @@ export class ArchivedClientsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    debugger;
     const user = JSON.parse(sessionStorage.getItem('user'));
     this.userProfile = user['userDetails'];
     this.currentUser = this.userProfile.userId;
@@ -135,7 +136,6 @@ export class ArchivedClientsComponent implements OnInit {
       if (client.subscriptions && client.subscriptions.length > 0) {
         client.package = client.subscriptions[0].name;
         if (client.orgSuperUser !== null && client.orgSuperUser !== null) {
-          client.name = client.orgSuperUser.firstName + ' ' + client.orgSuperUser.lastName;
           client.username = client.orgSuperUser.userName;
         }
       }
@@ -229,6 +229,7 @@ export class ArchivedClientsComponent implements OnInit {
         }
       });
   }
+  
 
   checkDeletePermission() {
     const data = this.data_service.checkPermission(this.permission.Delete_Organization.Id);

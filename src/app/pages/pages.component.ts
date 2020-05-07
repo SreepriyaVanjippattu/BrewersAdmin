@@ -36,9 +36,7 @@ export class PagesComponent {
     this.userProfile = user['userDetails']['position'];
     if (this.userProfile === Constants.Superadmin) {
       this.menu = MENU_ITEMS_SUPER_USER;
-    } else if (this.userProfile === Constants.Brewer || this.userProfile === Constants.OrgSuperUser || this.userProfile === Constants.OrgAdminUser || this.userProfile === Constants.OrgDashboardUser || this.userProfile === Constants.DemoUser) {
-      this.menu = MENU_ITEMS_ORGANIZATION;
-    }
+    } 
     
     idle.setIdle(1200);
     idle.setTimeout(5);

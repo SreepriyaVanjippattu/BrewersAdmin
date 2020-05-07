@@ -11,6 +11,7 @@ import { StatusUse } from '../../../../models/status-id-name';
 import { apiConfig } from '../../../../../environments/api-config';
 import * as XLSX from 'xlsx';
 import { String } from "typescript-string-operations";
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-list-clients',
@@ -44,6 +45,7 @@ export class ListClientsComponent implements OnInit {
   currentUser: any;
   statusName: string;
   searchText: string;
+  envURL: any;
   
   constructor(
     private httpService: HttpClient,
@@ -60,6 +62,7 @@ export class ListClientsComponent implements OnInit {
     this.currentUser = this.userProfile.userId;
     this.tenantId = this.userProfile.tenantId;
     this.toggleStatus = false;
+    this.envURL = environment.API.emailUrl;
     this.page = this.route.snapshot.queryParamMap.get('page');
     if (this.page) {
       this.getClientsList(this.page, this.config.itemsPerPage, this.searchText);
@@ -151,10 +154,12 @@ export class ListClientsComponent implements OnInit {
       subscribe((response) => {
         if (response && response['body']) {
           this.clientList = response['body']['clientDetails'];
-          sessionStorage.clientList = JSON.stringify(this.clientList);
           this.clientList.forEach(element => {
             if (element.status === this.status.active.id) {
               this.statusName = this.status.active.name;
+            }
+            else if (element.status === this.status.pending.id) {
+              this.statusName = this.status.pending.name;
             }
           });
           
@@ -234,26 +239,11 @@ export class ListClientsComponent implements OnInit {
      
       if (response && response['body']) {
         this.clientList = response['body']['clientDetails'];
-        sessionStorage.clientList = JSON.stringify(this.clientList);
         this.headerValue = response["body"]["pagingDetails"];
         if (this.headerValue) {
           this.config.totalItems = this.headerValue.totalCount;
           this.pageControl = this.config.totalItems === 0 ? true : false;
         }
-        this.clientList.map((client, idx) => {
-          if (client.OrgSuperUser !== null) {
-            client.contactName = client.OrgSuperUser.FirstName !== null ? client.OrgSuperUser.FirstName : '';
-            client.userName = client.OrgSuperUser.UserName;
-            client.PrimaryPhone = client.OrgSuperUser.PrimaryPhone;
-          }
-          if (client.Subscriptions && client.Subscriptions.length > 0) {
-            client.package = client.Subscriptions[0].Name;
-            if (client.OrgSuperUser !== null && client.OrgSuperUser !== null) {
-              client.name = client.OrgSuperUser.FirstName + ' ' + client.OrgSuperUser.LastName;
-              client.username = client.OrgSuperUser.UserName;
-            }
-          }
-        });
       }
     });
   }
@@ -304,12 +294,14 @@ export class ListClientsComponent implements OnInit {
 
   }
 
-  resetpasswordClick(email) {
+  resetpasswordClick(email,id) {
+    debugger;
     const params = {
-      EmailAddress: email,
-      Url: window.location.origin + '/login/forgot-changepassword',
+      emailAddress: email,
+      url: this.envURL + '/login/forgot-changepassword',
     };
-    this.apiService.putData(this.apiService.postEmail, params).subscribe(response => {
+    const postEmailApi = String.Format(this.apiService.postEmail, id);
+    this.apiService.postData(postEmailApi, params).subscribe(response => {
       if (response) {
         this.toastrService.show('Mail Sent', 'Success');
       }
@@ -330,9 +322,9 @@ export class ListClientsComponent implements OnInit {
   activateClientDirectory() {
     if (this.tenantStatus !== this.status.active.id) {
       const params = {
-        ClientId: this.tenantId,
-        StatusId: '7cd88ffb-cf41-4efc-9a17-d75bcb5b3770',
-        CurrentUser: JSON.parse(sessionStorage.user).UserProfile.Id,
+        clientID: this.clientList.id,
+        statusID: this.status.pending.id,
+        currentUser: this.currentUser,
       };
       this.apiService.putData(this.apiService.editClientStatus, params).subscribe((response: any) => {
         if (response.status === 200) {

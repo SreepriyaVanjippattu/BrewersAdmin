@@ -142,7 +142,7 @@
 
             <div class="form-group col-md-4">
                 <label for="phone">Phone</label>
-                <input disabled type="text" class="form-control" formControlName="phone" id="phone" placeholder="(555) 555-5555" (keyup)="formatPhone($event.target.value)" (keydown.backspace)="unformatPhone()" maxLength="10">
+                <input disabled type="text" class="form-control" formControlName="userPhone" id="phone" placeholder="(555) 555-5555" (keyup)="formatPhone($event.target.value)" (keydown.backspace)="unformatPhone()" maxLength="10">
                 <!-- <div *ngIf="formSubmitted">
                     <div *ngIf="form.phone.errors?.required" class="valid-error">
                         Phone No is required

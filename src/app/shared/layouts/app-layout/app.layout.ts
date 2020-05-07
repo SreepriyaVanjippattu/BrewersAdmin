@@ -44,18 +44,9 @@ export class AppLayoutComponent implements OnInit {
   ) { }
   ngOnInit() {
     const currentUrl = window.location.pathname;
-    if (currentUrl.includes('dashboard') || currentUrl === '/app/reports' || currentUrl.includes('app/reports/view')
-      || currentUrl.includes('recipes')
-      || currentUrl === '/app/user-directory' || currentUrl.includes('user-directory/')
-      || currentUrl.includes('user-directory/org-previleges')
-      || currentUrl.includes('preferences') || currentUrl.includes('profile-organization')
-      || currentUrl.includes('yeast-strains')) {
-      this.isGeneralUser = true;
-      this.generalUserIcon = true;
-      this.superAdminIcon = false;
-    } else {
-      this.isGeneralUser = false;
-      this.generalUserIcon = false;
+    if (currentUrl.includes('/app/clients') || currentUrl.includes('/app/reports-admin') || currentUrl.includes('/app/user-directory-admin') || currentUrl.includes('/app/settings')
+    || currentUrl.includes('/app/profile-wt-admin') || currentUrl.includes('/app/role-privileges')
+    || currentUrl.includes('/app/reset-password')) {
       this.superAdminIcon = true;
     }
   }
