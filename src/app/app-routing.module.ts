@@ -9,6 +9,11 @@ const routes: Routes = [
       .then(m => m.LoginModule),
   },
   {
+    path: 'signup',
+    loadChildren: () => import('../app/signup/signup.module')
+      .then(m => m.SignupModule),
+  },
+  {
     path: 'app',
     loadChildren: () => import('../app/pages/pages.module')
       .then(m => m.PagesModule),

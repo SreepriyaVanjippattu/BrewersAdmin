@@ -23,6 +23,24 @@ export class ApiProviderService {
 
   // api endpoints
   login = 'authorization/v1/login';
+  getAllBrewRun = 'brewrun/v1/brewers/{0}/brewrun/';
+  getAllActiveBrewUsers = 'user/v1/users/{0}/brewers';
+  getBrewRunMasterDetails = 'brewrun/v1/brewers/{0}/brewrun/masterdetails';
+  addBrewRun = 'brewrun/v1/brewers/{0}/brewrun';
+  ChangeBrewRunStatus = 'brewrun/v1/brewers/{0}/brewrun/{1}';
+  getBrewDetailsById = 'brewrun/v1/brewers/{0}/brewrun/{1}/details';
+  editBrewRun = "brewrun/v1/brewers/{0}/brewrun/{1}"
+  getAllArchivedBrewRun = 'brewrun/v1/brewers/{0}/brewrun/archived';
+  getBrewRunMashinMasterDetails = 'brewrun/v1/brewers/{0}/brewrun/mashin/masterdetails'
+  getBrewRunMashinDetails = 'brewrun/v1/brewers/{0}/brewrun/{1}/mashin/';
+  mashin = 'brewrun/v1/brewers/{0}/brewrun/{1}/mashin/';
+  getBrewLogMasterDetails = 'brewrun/v1/brewers/{0}/brewrun/brewlog/masterdetails';
+  getBrewLogDetails = 'brewrun/v1/brewers/{0}/brewrun/{1}/brewlog/';
+  getFermentationMasterDetails = 'brewrun/v1/brewers/{0}/brewrun/fermentation/masterdetails';
+  getFermentationDetails = 'brewrun/v1/brewers/{0}/brewrun/{1}/fermentation/';
+  getConditioningMasterDetails =  'brewrun/v1/brewers/{0}/brewrun/conditioning/masterdetails';
+  getConditioningDetails = 'brewrun/v1/brewers/{0}/brewrun/{1}/conditioning'
+
   // User Api/
   getAllActiveUsers = 'user/v1/brewers/{0}/users';
   editUser = 'user/v1/brewers/{0}/user';
@@ -53,7 +71,8 @@ export class ApiProviderService {
   getAllLoginLogoutReport='';
   getAllLastRunReportList='';
   getAllTenantSubscriptionReport='';
-
+  editRoles='';
+  deleteUsers='';
  
 
   // preference
@@ -70,10 +89,39 @@ export class ApiProviderService {
   getArchivedYeastStrains = 'brewrun/v1/brewers/{0}/yeaststrains/archived';
   archiveYeastStrain = 'brewrun/v1/brewers/{0}/yeaststrain/{1}/archive';
 
+  // recipe
+  getRecipeMasterDetails='brewrun/v1/brewers/{0}/recipe/masterdetails'
+  getAllRecipeByTenant = 'brewrun/v1/brewers/recipe/{0}';
+  getRecipebyId = 'brewrun/v1/brewers/recipe/{0}/{1}';
+  addRecipe = 'brewrun/v1/brewers/{0}/recipe/';
+  saveEditedRecipe = 'brewrun/v1/brewers/{0}/recipe/{1}';
+  commitRecipe = 'brewrun/v1/brewers/{0}/recipe/{1}/commit';
+  favoriteRecipe = 'brewrun/v1/brewers/{0}/recipe/{1}/favorite';
+  cloneRecipe = 'brewrun/v1/brewers/{0}/recipe/{1}/clone';
+  deleteRecipe = 'brewrun/v1/brewers/{0}/recipe/{1}';
+  getAllArchivedRecipes = 'brewrun/v1/brewers/recipe/{0}/archived';
+  archivedRecipe = 'brewrun/v1/brewers/{0}/recipe/{1}/archive';
+  getAllBrewReportsList = 'brewrun/v1/brewers/{0}/brewrun/reports';
+
+  addStyle = 'brewrun/v1/brewers/{0}/style/';
+  addType = 'brewrun/v1/brewers/{0}/maltGrainType/';
+  addSupplier = 'brewrun/v1/brewers/{0}/supplier';
+
+  getAllYeastStrains = 'brewrun/v1/brewers/{0}/yeaststrains/base';
+  getYeastStrainById = 'brewrun/v1/brewers/{0}/yeaststrain/{1}';
+  getAllActiveCountry = 'brewrun/v1/brewers/settings/countries';
+  getAllActiveAddIn = 'brewrun/v1/brewers/recipe/{0}/addin';
+  getAllActiveSupplier = 'brewrun/v1/brewers/{0}/suppliers';
+  getAllActiveMaltGrainType = 'brewrun/v1/brewers/recipe/{0}/maltgraintypes';
+  getAllActiveUnitType = 'brewrun/v1/brewers/settings/units';
+  getAllActiveStyle = 'brewrun/v1/brewers/settings/{0}/styles';
+
+
   logoutApi = 'Logout';
 
  
- 
+  getAllMaltGrainName = 'GetAllMaltGrainNameByTenantId';
+  getBrewRunById = 'GetBrewRunById';
   editClient = 'user/v1/brewers/{0}/tenant';  
   getSubscriptions = 'user/v1/brewers/subscriptions';
   isCompanyNameAvailable ='user/v1/brewers/companyname/{0}/check';

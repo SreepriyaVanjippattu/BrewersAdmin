@@ -6,6 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ApiProviderService } from '../../../../core/api-services/api-provider.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { Tenant } from '../../../../models/tenant';
 import { PhoneFormatPipe } from '../../../../core/utils/phone-format.pipe';
 import { StatusUse } from '../../../../models/status-id-name';
 import { NbToastrService } from '@nebular/theme';
@@ -34,6 +35,7 @@ export class EditClientsComponent implements OnInit {
   getTenantContent;
   currentStatus: Number;
   currentStatusText: string;
+  selectedTenant: Tenant;
   tenantList: any[];
   currentStatusValue;
   validPhone = true;
