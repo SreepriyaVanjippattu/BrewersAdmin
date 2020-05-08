@@ -314,7 +314,7 @@ export class EditClientsComponent implements OnInit {
         this.subName = this.dataTransfer.value;
         this.dataTransfer.key = '';
         this.dataTransfer.value = '';
-      } else if (this.editClientDetails.subscriptions[0]) {
+      } else if (this.editClientDetails.subscriptions && this.editClientDetails.subscriptions.length > 0) {
         this.subId = this.editClientDetails.subscriptions[0].id;
         this.subName = this.editClientDetails.subscriptions[0].name;
       }
@@ -344,25 +344,26 @@ export class EditClientsComponent implements OnInit {
         StatusId: this.clientEditForm.get('status').value,
         CurrentUser: this.userId,
       };
-
-      const paramsUser = {
-        Id: this.editClientDetails.orgSuperUser.id,
-        FirstName: this.clientEditForm.get('firstname').value,
-        LastName: this.clientEditForm.get('lastname').value,
-        EmailAddress: this.clientEditForm.get('userEmail').value,
-        PrimaryPhone: this.clientEditForm.get('userPhone').value,
-        Password: this.editClientDetails.orgSuperUser.password,
-        TenantId: this.id,
-        IsActive: this.editClientDetails.orgSuperUser.isActive,
-        ImageUrl: this.editClientDetails.orgSuperUser.imageURL,
-        Position: this.editClientDetails.orgSuperUser.position,
-        StatusId: this.editClientDetails.orgSuperUser.statusId,
-        CurrentUser: this.userId,
-        Roles: [{
-          Id: this.editClientDetails.orgSuperUser.roles[0].id,
-        }],
-      };
-      if (this.editClientDetails.systemSetting[0]) {
+      if (this.editClientDetails.orgSuperUser.roles && this.editClientDetails.orgSuperUser.roles.length > 0) {
+        var paramsUser = {
+          Id: this.editClientDetails.orgSuperUser.id,
+          FirstName: this.clientEditForm.get('firstname').value,
+          LastName: this.clientEditForm.get('lastname').value,
+          EmailAddress: this.clientEditForm.get('userEmail').value,
+          PrimaryPhone: this.clientEditForm.get('userPhone').value,
+          Password: this.editClientDetails.orgSuperUser.password,
+          TenantId: this.id,
+          IsActive: this.editClientDetails.orgSuperUser.isActive,
+          ImageUrl: this.editClientDetails.orgSuperUser.imageURL,
+          Position: this.editClientDetails.orgSuperUser.position,
+          StatusId: this.editClientDetails.orgSuperUser.statusId,
+          CurrentUser: this.userId,
+          Roles: [{
+            Id: this.editClientDetails.orgSuperUser.roles[0].id,
+          }],
+        };
+      }
+      if (this.editClientDetails.systemSetting && this.editClientDetails.systemSetting.length > 0) {
         var paramSettings = {
 
           Id: this.editClientDetails.systemSetting[0].id,

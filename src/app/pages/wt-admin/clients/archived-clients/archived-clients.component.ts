@@ -77,7 +77,6 @@ export class ArchivedClientsComponent implements OnInit {
   }
 
   getArchivedClientDetails(pageNumber, pageSize, searchText) {
-
     this.router.navigate(['app/clients/archives'], {
       queryParams: {
         page: this.config.currentPage,
