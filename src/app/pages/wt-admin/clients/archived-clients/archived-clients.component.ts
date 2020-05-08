@@ -206,15 +206,16 @@ export class ArchivedClientsComponent implements OnInit {
       }
     });
     const params = {
-      clientID: this.clientToRestore.id,
-      statusID: this.status.pending.id,
+      clientId: this.clientToRestore.id,
+      statusId: this.status.active.id,
       currentUser: this.currentUser,
     };
     this.restoreClient(params);
   }
 
   restoreClient(params) {
-    this.apiService.putData(this.apiService.editClientStatus, params).subscribe((response: any) => {
+    const restoreClientApi = String.Format(this.apiService.editClientStatus, this.clientToRestore.id)
+    this.apiService.putData(restoreClientApi, params).subscribe((response: any) => {
       if (response.status === 200) {
         this.toastrService.show('Client Restored', 'Success');
         this.router.navigate(['app/clients']);
@@ -248,11 +249,12 @@ export class ArchivedClientsComponent implements OnInit {
 
   deleteUser() {
     const params = {
-      clientID: this.idNumber,
-      statusID: this.status.pending.id,
+      clientId: this.idNumber,
+      statusId: this.status.deleted.id,
       currentUser: this.currentUser,
     };
-    this.apiService.putData(this.apiService.editClientStatus, params).subscribe((response: any) => {
+    const deleteClientApi = String.Format(this.apiService.editClientStatus, this.idNumber);
+    this.apiService.putData(deleteClientApi, params).subscribe((response: any) => {
       if (response.status === 200) {
         this.toastrService.show('Client Deleted', 'Success');
         this.modalservice.close('archiveClient');

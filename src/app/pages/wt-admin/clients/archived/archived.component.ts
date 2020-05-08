@@ -110,11 +110,12 @@ export class ArchivedComponent implements OnInit {
 
   restoreClick() {
     const params = {
-      clientID: this.editClientDetails.id,
-      statusID: this.status.pending.id,
+      clientId: this.editClientDetails.id,
+      statusId: this.status.pending.id,
       currentUser: this.currentUser,
     };
-    this.apiService.putData(this.apiService.editClientStatus, params).subscribe((response: any) => {
+    const restoreClientApi = String.Format(this.apiService.editClientStatus, this.editClientDetails.id)
+    this.apiService.putData(restoreClientApi, params).subscribe((response: any) => {
       if (response.status === 200) {
         this.toast.show('Client Restored', 'Success');
         this.router.navigate(['app/clients']);

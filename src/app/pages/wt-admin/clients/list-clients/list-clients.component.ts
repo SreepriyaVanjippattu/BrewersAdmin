@@ -43,7 +43,6 @@ export class ListClientsComponent implements OnInit {
   tenantStatus: any;
   userProfile: any;
   currentUser: any;
-  statusName: string;
   searchText: string;
   envURL: any;
   
@@ -156,10 +155,10 @@ export class ListClientsComponent implements OnInit {
           this.clientList = response['body']['clientDetails'];
           this.clientList.forEach(element => {
             if (element.status === this.status.active.id) {
-              this.statusName = this.status.active.name;
+              element.status = this.status.active.name;
             }
             else if (element.status === this.status.pending.id) {
-              this.statusName = this.status.pending.name;
+              element.status = this.status.pending.name;
             }
           });
           
@@ -235,17 +234,7 @@ export class ListClientsComponent implements OnInit {
   }
 
   searchClient() {
-    this.apiService.getDataList(this.apiService.getAllActiveClients , this.config.currentPage, this.config.itemsPerPage, null,null, this.searchText).subscribe((response) => {
-     
-      if (response && response['body']) {
-        this.clientList = response['body']['clientDetails'];
-        this.headerValue = response["body"]["pagingDetails"];
-        if (this.headerValue) {
-          this.config.totalItems = this.headerValue.totalCount;
-          this.pageControl = this.config.totalItems === 0 ? true : false;
-        }
-      }
-    });
+    this.getClientsList(this.config.currentPage, this.config.itemsPerPage, this.searchText);
   }
 
   clear() {
@@ -263,13 +252,23 @@ export class ListClientsComponent implements OnInit {
         this.clientToArchive = element;
       }
     });
-    
-    this.archiveClient();
+    if (this.clientToArchive.status === this.status.active.id) {
+      this.archiveClient();
+    }
+    else {
+      this.toastrService.show('Only Active clients can be archived', 'Sorry');
+    }
   }
 
   archiveClient() {
-    const archiveClientApi = String.Format(this.apiService.archiveClient, this.archiveId )
-    this.apiService.patchData(archiveClientApi).subscribe((response: any) => {
+
+    const params = {
+      clientId: this.clientToArchive.id,
+      statusId: this.status.archive.id,
+      currentUser: this.currentUser,
+    };
+    const archiveClientApi = String.Format(this.apiService.editClientStatus, this.clientToArchive.id)
+    this.apiService.putData(archiveClientApi, params).subscribe((response: any) => {
       if (response.status === 200) {
         this.toastrService.success('Client Archived', 'Success');
         this.goToArchive();
@@ -321,11 +320,12 @@ export class ListClientsComponent implements OnInit {
   activateClientDirectory() {
     if (this.tenantStatus !== this.status.active.id) {
       const params = {
-        clientID: this.clientList.id,
-        statusID: this.status.pending.id,
+        clientId: this.tenantId,
+        statusId: this.status.active.id,
         currentUser: this.currentUser,
       };
-      this.apiService.putData(this.apiService.editClientStatus, params).subscribe((response: any) => {
+      const activateClientApi = String.Format(this.apiService.editClientStatus, this.tenantId);
+      this.apiService.putData(activateClientApi, params).subscribe((response: any) => {
         if (response.status === 200) {
           this.toastrService.success('Client Activated', 'Success');
           this.ngOnInit();

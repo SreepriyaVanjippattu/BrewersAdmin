@@ -91,7 +91,7 @@ export class EditClientsComponent implements OnInit {
     this.page = this.route.snapshot.url[0].path;
     if (this.page === 'edit') {
       this.getAllTenantStatus();
-      this.getSingleEditUserDetails(this.id, status);
+      this.getSingleEditUserDetails(this.id);
     }
   }
 
@@ -218,24 +218,19 @@ export class EditClientsComponent implements OnInit {
     const selectValue = this.selectedValue;
   }
 
-  getSingleEditUserDetails(id, status) {
-    if (!sessionStorage.clientList || sessionStorage.clientList === "") {
-      const getClientDetailsbyIdApi = String.Format(this.apiService.getClientDetailById, id);
-      this.apiService.getDataList(getClientDetailsbyIdApi, 1, 1, null, null, null).
-        subscribe((response) => {
-          this.editClientDetails = response['body'];
-          this.setDataToEdit();
-        }, (error) => {
-          if (error instanceof HttpErrorResponse) {
-            this.toast.danger(error.error.message, 'Try Again');
-          } else {
-            this.toast.danger(error, 'Try Again');
-          }
-        });
-    } else {
-      this.editClientDetails = JSON.parse(sessionStorage.clientList);
-      this.setDataToEdit();
-    }
+  getSingleEditUserDetails(id) {
+    const getClientDetailsbyIdApi = String.Format(this.apiService.getClientDetailById, id);
+    this.apiService.getDataList(getClientDetailsbyIdApi, 1, 1, null, null, null).
+      subscribe((response) => {
+        this.editClientDetails = response['body'];
+        this.setDataToEdit();
+      }, (error) => {
+        if (error instanceof HttpErrorResponse) {
+          this.toast.danger(error.error.message, 'Try Again');
+        } else {
+          this.toast.danger(error, 'Try Again');
+        }
+      });
   }
 
   setDataToEdit() {
@@ -261,20 +256,18 @@ export class EditClientsComponent implements OnInit {
           this.clientEditForm.get('userPhone').setValue(this.editClientDetails.orgSuperUser.phone);
         }
         if (this.editClientDetails.startDate) {
-          let startDate = this.editClientDetails.startDate;
-          startDate = this.datepipe.transform(new Date(startDate), "dd/MM/yyyy hh:mm:ss a");
-          this.clientEditForm.get('startDate').setValue(startDate);
-          const createdDate = this.editClientDetails.systemSetting[0].createdDate;
-          this.minStartDate = createdDate;
-          this.maxStartDate = this.editClientDetails.endDate;
+          this.clientEditForm.get('startDate').setValue(this.editClientDetails.startDate);
+          if (this.editClientDetails.systemSetting[0]) {
+            const createdDate = this.editClientDetails.systemSetting[0].createdDate;
+            this.minStartDate = createdDate;
+            this.maxStartDate = this.editClientDetails.endDate;
+          }
         }
         if (this.editClientDetails.endDate) {
-          let expiryDate = this.editClientDetails.endDate;
-          expiryDate = this.datepipe.transform(new Date(expiryDate), "dd/MM/yyyy hh:mm:ss a");
-          this.clientEditForm.get('expiryDate').setValue(expiryDate);
+          this.clientEditForm.get('expiryDate').setValue(this.editClientDetails.endDate);
           this.minExpiryDate = this.clientEditForm.get("startDate").value;
         }
-        if (this.editClientDetails.orgSuperUser.firstName ) {
+        if (this.editClientDetails.orgSuperUser.firstName) {
           this.clientEditForm.get('firstname').setValue(this.editClientDetails.orgSuperUser.firstName);
         }
         if (this.editClientDetails.orgSuperUser.lastName) {
@@ -321,24 +314,23 @@ export class EditClientsComponent implements OnInit {
         this.subName = this.dataTransfer.value;
         this.dataTransfer.key = '';
         this.dataTransfer.value = '';
-      } else {
+      } else if (this.editClientDetails.subscriptions[0]) {
         this.subId = this.editClientDetails.subscriptions[0].id;
         this.subName = this.editClientDetails.subscriptions[0].name;
       }
       this.clientEditForm.get('userEmail').disable();
-      this.imageLink = this.editClientDetails.ImageURL;
+      this.imageLink = this.editClientDetails.imageURL;
     }
   }
 
   saveForm() {
-
     if (this.clientEditForm.valid) {
       const str_client = this.clientEditForm.value.street.split(',');
       const select = this.statusElement.nativeElement;
       const statusText = select.options[select.selectedIndex].innerText;
       const paramsClient = {
-        Id: this.id,
-        Name: this.editClientDetails.Name,
+        Id: this.editClientDetails.id,
+        Name: this.editClientDetails.name,
         ContactEmail: this.clientEditForm.get('email').value,
         ContactPhone: this.clientEditForm.get('phone').value,
         Address1: str_client[0],
@@ -354,45 +346,53 @@ export class EditClientsComponent implements OnInit {
       };
 
       const paramsUser = {
-        Id: this.editClientDetails.OrgSuperUser.Id,
+        Id: this.editClientDetails.orgSuperUser.id,
         FirstName: this.clientEditForm.get('firstname').value,
         LastName: this.clientEditForm.get('lastname').value,
         EmailAddress: this.clientEditForm.get('userEmail').value,
         PrimaryPhone: this.clientEditForm.get('userPhone').value,
-        Password: this.editClientDetails.OrgSuperUser.Password,
+        Password: this.editClientDetails.orgSuperUser.password,
         TenantId: this.id,
-        IsActive: this.editClientDetails.OrgSuperUser.IsActive,
-        ImageUrl: this.editClientDetails.OrgSuperUser.ImageUrl,
-        Position: this.editClientDetails.OrgSuperUser.Position,
-        StatusId: this.editClientDetails.OrgSuperUser.StatusId,
+        IsActive: this.editClientDetails.orgSuperUser.isActive,
+        ImageUrl: this.editClientDetails.orgSuperUser.imageURL,
+        Position: this.editClientDetails.orgSuperUser.position,
+        StatusId: this.editClientDetails.orgSuperUser.statusId,
         CurrentUser: this.userId,
         Roles: [{
-          Id: this.editClientDetails.OrgSuperUser.Roles[0].Id,
+          Id: this.editClientDetails.orgSuperUser.roles[0].id,
         }],
       };
-      const paramSettings = {
-        Id: this.editClientDetails.SystemSetting[0].Id,
-        Name: this.editClientDetails.SystemSetting[0].Name,
-        EmailSettingId: this.editClientDetails.SystemSetting[0].EmailSetting.Id,
-        SubscriptionId: this.subId,
-        TenantId: this.id,
-        StartDate: (new Date(this.clientEditForm.get('startDate').value)).toLocaleString(),
-        EndDate: (new Date(this.clientEditForm.get('expiryDate').value)).toLocaleString(),
-        EmailSetting: {},
-        IsUserLoggedIn: false,
-        UserId: this.userId,
-      };
+      if (this.editClientDetails.systemSetting[0]) {
+        var paramSettings = {
+
+          Id: this.editClientDetails.systemSetting[0].id,
+          Name: this.editClientDetails.systemSetting[0].name,
+          EmailSettingId: this.editClientDetails.systemSetting[0].emailSettingId,
+          SubscriptionId: this.editClientDetails.systemSetting[0].subscriptionId,
+          TenantId: this.editClientDetails.systemSetting[0].tenantId,
+          StartDate: (new Date(this.clientEditForm.get('startDate').value)).toLocaleString(),
+          EndDate: (new Date(this.clientEditForm.get('expiryDate').value)).toLocaleString(),
+          EmailSetting: {},
+          IsUserLoggedIn: false,
+          UserId: this.userId,
+        };
+      }
       this.editClient(paramsClient, paramsUser, paramSettings);
     }
   }
 
   editClient(paramsClient, paramsUser, paramSettings) {
-    this.apiService.putData(this.apiService.editClient, paramsClient).subscribe(response => {
+    const editClientApi = String.Format(this.apiService.editClient,this.editClientDetails.id );
+    this.apiService.putData(editClientApi, paramsClient).subscribe(response => {
       if (response) {
         this.editSubscriptions(paramSettings, paramsUser);
       }
-    }, error => {
-      this.toast.danger('', error.error.Message);
+    }, (error) => {
+      if (error instanceof HttpErrorResponse) {
+        this.toast.danger(error.error.message, 'Try Again');
+      } else {
+        this.toast.danger(error, 'Try Again');
+      }
     });
   }
 
@@ -401,19 +401,28 @@ export class EditClientsComponent implements OnInit {
       if (response) {
         this.editUser(paramsUser);
       }
-    }, error => {
-      this.toast.danger('', error.error.Message);
+    }, (error) => {
+      if (error instanceof HttpErrorResponse) {
+        this.toast.danger(error.error.message, 'Try Again');
+      } else {
+        this.toast.danger(error, 'Try Again');
+      }
     });
   }
 
   editUser(user) {
-    this.apiService.putData(this.apiService.editUser + '&rolestatus=false', user).subscribe(response => {
+    const editUserApi = String.Format(this.apiService.editUser, this.editClientDetails.id)
+    this.apiService.putData(editUserApi, user).subscribe((response: any) => {
       if (response) {
         this.toast.success('Client Edited', 'Success');
         this.router.navigate(['app/clients']);
       }
-    }, error => {
-      this.toast.danger('', error.error.Message);
+    }, (error) => {
+      if (error instanceof HttpErrorResponse) {
+        this.toast.danger(error.error.message, 'Try Again');
+      } else {
+        this.toast.danger(error, 'Try Again');
+      }
     });
   }
 
