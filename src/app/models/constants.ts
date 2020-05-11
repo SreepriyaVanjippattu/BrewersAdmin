@@ -6,5 +6,7 @@ export class Constants {
         public static readonly OrgAdminUser = "Org Admin User";
         public static readonly OrgDashboardUser = "Org Dashboard User";
         public static readonly DemoUser = "Demo User";
+        public static readonly ActiveStatus = "Active";
+        public static readonly PendingStatus = "Pending";
 
 }

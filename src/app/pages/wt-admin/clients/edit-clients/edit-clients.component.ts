@@ -239,8 +239,7 @@ export class EditClientsComponent implements OnInit {
         this.package = this.editClientDetails.subscriptions[0].name;
       }
       if (this.editClientDetails.name) {
-        this.clientEditForm.get('company').setValue(
-          this.editClientDetails.name.toUpperCase() + this.editClientDetails.name.substr(1).toUpperCase());
+        this.clientEditForm.get('company').setValue(this.editClientDetails.name.toUpperCase());
       }
       if (this.editClientDetails.contactEmail) {
         this.clientEditForm.get('email').setValue(this.editClientDetails.contactEmail);
@@ -323,59 +322,65 @@ export class EditClientsComponent implements OnInit {
     }
   }
 
+
   saveForm() {
     if (this.clientEditForm.valid) {
       const str_client = this.clientEditForm.value.street.split(',');
       const select = this.statusElement.nativeElement;
-      const statusText = select.options[select.selectedIndex].innerText;
+      const statusText = select.options[select.selectedIndex].value;
+
       const paramsClient = {
-        Id: this.editClientDetails.id,
-        Name: this.editClientDetails.name,
-        ContactEmail: this.clientEditForm.get('email').value,
-        ContactPhone: this.clientEditForm.get('phone').value,
-        Address1: str_client[0],
-        Address2: str_client[1],
-        State: this.clientEditForm.get('state').value,
-        Country: this.clientEditForm.get('country').value,
-        City: this.clientEditForm.get('city').value,
-        Postalcode: this.clientEditForm.get('postalCode').value,
-        IsActive: true,
-        Status: statusText,
-        StatusId: this.clientEditForm.get('status').value,
-        CurrentUser: this.userId,
+        id: this.editClientDetails.id,
+        name: this.editClientDetails.name,
+        companyAlias: this.editClientDetails.companyAlias,
+        contactEmail: this.clientEditForm.get('email').value,
+        contactPhone: this.clientEditForm.get('phone').value,
+        address1: str_client[0],
+        address2: str_client[1],
+        state: this.clientEditForm.get('state').value,
+        country: this.clientEditForm.get('country').value,
+        city: this.clientEditForm.get('city').value,
+        postalcode: this.clientEditForm.get('postalCode').value,
+        imageURL : this.editClientDetails.imageURL,
+        isActive: true,
+        status: statusText,
+        modifiedDate: this.editClientDetails.modifiedDate,
       };
       if (this.editClientDetails.orgSuperUser.roles && this.editClientDetails.orgSuperUser.roles.length > 0) {
         var paramsUser = {
-          Id: this.editClientDetails.orgSuperUser.id,
-          FirstName: this.clientEditForm.get('firstname').value,
-          LastName: this.clientEditForm.get('lastname').value,
-          EmailAddress: this.clientEditForm.get('userEmail').value,
-          PrimaryPhone: this.clientEditForm.get('userPhone').value,
-          Password: this.editClientDetails.orgSuperUser.password,
-          TenantId: this.id,
-          IsActive: this.editClientDetails.orgSuperUser.isActive,
-          ImageUrl: this.editClientDetails.orgSuperUser.imageURL,
-          Position: this.editClientDetails.orgSuperUser.position,
-          StatusId: this.editClientDetails.orgSuperUser.statusId,
-          CurrentUser: this.userId,
-          Roles: [{
-            Id: this.editClientDetails.orgSuperUser.roles[0].id,
+          id: this.editClientDetails.orgSuperUser.id,
+          firstName: this.clientEditForm.get('firstname').value,
+          middleName: '',
+          lastName: this.clientEditForm.get('lastname').value,
+          emailAddress: this.clientEditForm.get('userEmail').value,
+          phone: this.clientEditForm.get('userPhone').value,
+          userName: this.clientEditForm.get('userEmail').value,
+          password: this.editClientDetails.orgSuperUser.password,
+          createdDate: this.editClientDetails.orgSuperUser.createdDate,
+          modifiedDate: this.editClientDetails.orgSuperUser.modifiedDate,
+          isActive: this.editClientDetails.orgSuperUser.isActive,
+          imageUrl: this.editClientDetails.orgSuperUser.imageURL,
+          position: this.editClientDetails.orgSuperUser.position,
+          statusId: this.editClientDetails.orgSuperUser.statusId,
+          tenantId: this.id,
+          roles: [{
+            id: this.editClientDetails.orgSuperUser.roles[0].id,
           }],
         };
       }
       if (this.editClientDetails.systemSetting && this.editClientDetails.systemSetting.length > 0) {
         var paramSettings = {
 
-          Id: this.editClientDetails.systemSetting[0].id,
-          Name: this.editClientDetails.systemSetting[0].name,
-          EmailSettingId: this.editClientDetails.systemSetting[0].emailSettingId,
-          SubscriptionId: this.editClientDetails.systemSetting[0].subscriptionId,
-          TenantId: this.editClientDetails.systemSetting[0].tenantId,
-          StartDate: (new Date(this.clientEditForm.get('startDate').value)).toLocaleString(),
-          EndDate: (new Date(this.clientEditForm.get('expiryDate').value)).toLocaleString(),
-          EmailSetting: {},
-          IsUserLoggedIn: false,
-          UserId: this.userId,
+          id: this.editClientDetails.systemSetting[0].id,
+          name: this.editClientDetails.systemSetting[0].name,
+          emailSettingId: this.editClientDetails.systemSetting[0].emailSettingId,
+          subscriptionId: this.editClientDetails.systemSetting[0].subscriptionId,
+          tenantId: this.editClientDetails.systemSetting[0].tenantId,
+          modifiedDate: this.editClientDetails.systemSetting[0].modifiedDate,
+          startDate:(new Date(this.clientEditForm.get('startDate').value)).toLocaleString(),
+          endDate: (new Date(this.clientEditForm.get('expiryDate').value)).toLocaleString(),
+          subscriptionEmail: this.clientEditForm.get('email').value,
+          supportEmail: this.clientEditForm.get('email').value,
         };
       }
       this.editClient(paramsClient, paramsUser, paramSettings);

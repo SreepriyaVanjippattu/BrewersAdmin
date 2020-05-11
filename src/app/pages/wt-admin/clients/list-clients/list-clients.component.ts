@@ -12,6 +12,7 @@ import { apiConfig } from '../../../../../environments/api-config';
 import * as XLSX from 'xlsx';
 import { String } from "typescript-string-operations";
 import { environment } from '../../../../../environments/environment';
+import {Constants} from '../../../../models/constants';
 
 @Component({
   selector: 'app-list-clients',
@@ -252,7 +253,7 @@ export class ListClientsComponent implements OnInit {
         this.clientToArchive = element;
       }
     });
-    if (this.clientToArchive.status === this.status.active.id) {
+    if (this.clientToArchive.status === Constants.ActiveStatus) {
       this.archiveClient();
     }
     else {
@@ -318,7 +319,7 @@ export class ListClientsComponent implements OnInit {
   }
 
   activateClientDirectory() {
-    if (this.tenantStatus !== this.status.active.id) {
+    if (this.tenantStatus !== Constants.ActiveStatus) {
       const params = {
         clientId: this.tenantId,
         statusId: this.status.active.id,

@@ -104,7 +104,7 @@ export class ViewclientComponent implements OnInit {
         this.package = this.editClientDetails.subscriptions[0].name;
       }
       if (this.editClientDetails.name) {
-        this.viewClientForm.get('company').setValue(this.editClientDetails.name.toUpperCase() + this.editClientDetails.name.substr(1).toUpperCase());
+        this.viewClientForm.get('company').setValue(this.editClientDetails.name.toUpperCase());
       }
       if (this.editClientDetails.contactEmail) {
         this.viewClientForm.get('email').setValue(this.editClientDetails.contactEmail);
@@ -116,12 +116,12 @@ export class ViewclientComponent implements OnInit {
         if (this.editClientDetails.orgSuperUser.phone) {
           this.viewClientForm.get('phone').setValue(this.editClientDetails.orgSuperUser.phone);
         }
-        if (this.editClientDetails.orgSuperUser.createdDate) {
+        if (this.editClientDetails.startDate) {
           let startDate = this.editClientDetails.startDate;
           startDate = this.datepipe.transform(new Date(startDate), 'dd/MM/yyyy  hh:mm:ss a');
           this.viewClientForm.get('startDate').setValue(startDate);
         }
-        if (this.editClientDetails.orgSuperUser.modifiedDate) {
+        if (this.editClientDetails.endDate) {
           let expiryDate = this.editClientDetails.endDate;
           expiryDate = this.datepipe.transform(new Date(expiryDate), 'dd/MM/yyyy  hh:mm:ss a')
           this.viewClientForm.get('expiryDate').setValue(expiryDate);
