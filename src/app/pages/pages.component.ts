@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { MENU_ITEMS_SUPER_USER, MENU_ITEMS_ORGANIZATION } from './pages-menu';
+import { MENU_ITEMS_SUPER_USER} from './pages-menu';
 import { Idle, DEFAULT_INTERRUPTSOURCES } from '@ng-idle/core';
 import { Router } from '@angular/router';
 import { ApiProviderService } from '../core/api-services/api-provider.service';
